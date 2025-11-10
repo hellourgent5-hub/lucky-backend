@@ -3,10 +3,10 @@ import dotenv from "dotenv";
 import cors from "cors";
 import mongoose from "mongoose";
 
-import productRoutes from "./routes/productRoutes.js";
-import userRoutes from "./routes/userRoutes.js";
-import authRoutes from "./routes/authRoutes.js";
-import orderRoutes from "./routes/orderRoutes.js";
+import productRoutes from ".src/routes/productRoutes.js";
+import userRoutes from ".src/routes/userRoutes.js";
+import authRoutes from ".src/routes/authRoutes.js";
+import orderRoutes from ".src/routes/orderRoutes.js";
 
 dotenv.config();
 const app = express();
