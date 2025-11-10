@@ -1,34 +1,11 @@
-import express from "express";
-import dotenv from "dotenv";
-import cors from "cors";
-import mongoose from "mongoose";
+require('dotenv').config();
+const app = require('./app');
+const connectDB = require('./config/db');
 
-import productRoutes from ".src/routes/productRoutes.js";
-import userRoutes from ".src/routes/userRoutes.js";
-import authRoutes from ".src/routes/authRoutes.js";
-import orderRoutes from ".src/routes/orderRoutes.js";
-
-dotenv.config();
-const app = express();
-
-app.use(cors());
-app.use(express.json());
-
-app.get("/", (req, res) => {
-  res.json({ ok: true, message: "Backend running successfully 🚀" });
+const PORT = process.env.PORT || 5000;
+connectDB(process.env.MONGO_URI).then(() => {
+  app.listen(PORT, () => console.log('Server running on', PORT));
+}).catch(err => {
+  console.error('DB connection failed', err);
+  process.exit(1);
 });
-
-// ✅ Mount routes
-app.use("/api/products", productRoutes);
-app.use("/api/users", userRoutes);
-app.use("/api/auth", authRoutes);
-app.use("/api/orders", orderRoutes);
-
-const PORT = process.env.PORT || 10000;
-
-mongoose
-  .connect(process.env.MONGO_URI)
-  .then(() => {
-    app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
-  })
-  .catch((err) => console.error(err));
