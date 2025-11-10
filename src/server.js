@@ -1,9 +1,8 @@
 import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
-import connectDB from "./config/db.js"; // ✅ correct
-import userRoutes from "./routes/userRoutes.js"; // ✅ correct
-import productRoutes from "./routes/productRoutes.js"; // ✅ correct
+import connectDB from "./config/db.js";
+import userRoutes from "./routes/userRoutes.js";
 
 dotenv.config();
 connectDB();
@@ -11,21 +10,13 @@ connectDB();
 const app = express();
 
 app.use(express.json());
-app.use(
-  cors({
-    origin: process.env.CLIENT_URL,
-    methods: ["GET", "POST", "PUT", "DELETE"],
-    credentials: true,
-  })
-);
-
-// ✅ API Routes
-app.use("/api/users", userRoutes);
-app.use("/api/products", productRoutes);
+app.use(cors());
 
 app.get("/", (req, res) => {
-  res.send("Lucky Backend Running Successfully 🚀");
+  res.send("Backend running 🚀");
 });
 
+app.use("/api/users", userRoutes);
+
 const PORT = process.env.PORT || 10000;
-app.listen(PORT, () => console.log(`✅ Server running on port ${PORT}`));
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
