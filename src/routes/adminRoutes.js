@@ -39,6 +39,19 @@ router.post("/login", async (req, res) => {
 });
 
 // =============================
+// Get All Users (for admin panel)
+// =============================
+router.get("/users", async (req, res) => {
+  try {
+    const users = await User.find({ isAdmin: false }).select("-password");
+    res.json(users);
+  } catch (err) {
+    console.error("Fetch users error:", err);
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
+// =============================
 // TEMP: Reset Admin Password
 // =============================
 router.get("/reset-admin", async (req, res) => {
@@ -54,6 +67,37 @@ router.get("/reset-admin", async (req, res) => {
   } catch (err) {
     console.error("Reset error:", err);
     res.status(500).json({ message: "Error resetting admin password" });
+  }
+});
+
+// =============================
+// TEMP: Create Admin if Missing
+// =============================
+router.get("/create-admin", async (req, res) => {
+  try {
+    const adminEmail = "admin@example.com";
+    const existing = await User.findOne({ email: adminEmail });
+
+    if (existing) {
+      return res.json({ message: "Admin already exists ✅" });
+    }
+
+    const hashed = await bcrypt.hash("admin123", 10);
+    await User.create({
+      name: "Admin",
+      email: adminEmail,
+      password: hashed,
+      isAdmin: true,
+    });
+
+    res.json({
+      message: "Admin created successfully ✅",
+      email: adminEmail,
+      password: "admin123",
+    });
+  } catch (err) {
+    console.error("Create admin error:", err);
+    res.status(500).json({ message: "Error creating admin" });
   }
 });
 
