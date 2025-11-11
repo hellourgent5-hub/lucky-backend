@@ -13,32 +13,28 @@ router.post("/login", async (req, res) => {
     if (!admin) return res.status(404).json({ message: "Admin not found" });
 
     const isMatch = await bcrypt.compare(password, admin.password);
-    if (!isMatch) return res.status(400).json({ message: "Invalid credentials" });
+    if (!isMatch) return res.status(400).json({ message: "Wrong password" });
 
-    const token = jwt.sign({ id: admin._id, isAdmin: true }, process.env.JWT_SECRET || "secret", { expiresIn: "1d" });
+    const token = jwt.sign({ id: admin._id }, process.env.JWT_SECRET, { expiresIn: "7d" });
     res.json({ token, admin: { name: admin.name, email: admin.email } });
   } catch (err) {
-    res.status(500).json({ message: err.message });
+    res.status(500).json({ message: "Server error" });
   }
 });
 
 // Reset admin password
 router.get("/reset-admin", async (req, res) => {
   try {
-    const email = "admin@example.com";
-    let admin = await User.findOne({ email });
-    const hashed = await bcrypt.hash("123456", 10);
-
-    if (!admin) {
-      admin = await User.create({ name: "Admin", email, password: hashed, isAdmin: true });
-      return res.json({ message: "Admin created ✅" });
-    }
-
-    admin.password = hashed;
-    await admin.save();
+    const adminEmail = "admin@example.com";
+    const hashedPassword = await bcrypt.hash("123456", 10);
+    await User.findOneAndUpdate(
+      { email: adminEmail, isAdmin: true },
+      { password: hashedPassword },
+      { upsert: true }
+    );
     res.json({ message: "Admin password reset to 123456 ✅" });
   } catch (err) {
-    res.status(500).json({ message: err.message });
+    res.status(500).json({ message: "Error resetting admin" });
   }
 });
 
