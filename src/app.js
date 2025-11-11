@@ -1,27 +1,30 @@
 const express = require('express');
-const morgan = require('morgan');
+const dotenv = require('dotenv');
+const mongoose = require('mongoose');
 const cors = require('cors');
-const bodyParser = require('body-parser');
+const morgan = require('morgan');
 
-const productRoutes = require('./routes/productRoutes');
-const userRoutes = require('./routes/userRoutes');
-const orderRoutes = require('./routes/orderRoutes');
+dotenv.config();
 
 const app = express();
 
 // Middleware
+app.use(express.json());
 app.use(cors());
-app.use(bodyParser.json());
 app.use(morgan('dev'));
 
 // Routes
-app.use('/api/products', productRoutes);
-app.use('/api/users', userRoutes);
-app.use('/api/orders', orderRoutes);
+const userRoutes = require('./routes/userRoutes');
+const productRoutes = require('./routes/productRoutes');
 
-// Root route
-app.get('/', (req, res) => {
-  res.send('Lucky Marketplace Backend is running');
-});
+app.use('/api/users', userRoutes);
+app.use('/api/products', productRoutes);
+
+// Connect to MongoDB
+mongoose.connect(process.env.MONGO_URI, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true
+}).then(() => console.log('MongoDB connected'))
+  .catch(err => console.log('MongoDB connection error:', err));
 
 module.exports = app;
