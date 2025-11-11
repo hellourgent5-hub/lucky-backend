@@ -1,27 +1,28 @@
-const User = require('./models/User');
-const bcrypt = require('bcryptjs');
+// src/app.js
+const express = require('express');
+const cors = require('cors');
+const morgan = require('morgan');
 
-const createAdminIfNotExists = async () => {
-  try {
-    const adminEmail = 'admin@example.com';
-    const existingAdmin = await User.findOne({ email: adminEmail });
+// Routes
+const userRoutes = require('./routes/userRoutes');
+const productRoutes = require('./routes/productRoutes');
+const orderRoutes = require('./routes/ordersRoutes');
 
-    if (!existingAdmin) {
-      const hashedPassword = await bcrypt.hash('admin123', 10);
-      await User.create({
-        name: 'Admin',
-        email: adminEmail,
-        password: hashedPassword,
-        isAdmin: true
-      });
-      console.log('✅ Permanent admin user created.');
-    } else {
-      console.log('Admin already exists.');
-    }
-  } catch (err) {
-    console.error('❌ Error creating admin:', err);
-  }
-};
+const app = express();
 
-// Call this **after MongoDB is connected**
-createAdminIfNotExists();
+// Middlewares
+app.use(cors());
+app.use(express.json());
+app.use(morgan('dev'));
+
+// API Routes
+app.use('/api/users', userRoutes);
+app.use('/api/products', productRoutes);
+app.use('/api/orders', orderRoutes);
+
+// Health check
+app.get('/', (req, res) => {
+  res.send('🎉 Lucky Marketplace Backend is running!');
+});
+
+module.exports = app;
