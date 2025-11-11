@@ -1,28 +1,26 @@
 // src/app.js
-const express = require('express');
-const cors = require('cors');
-const morgan = require('morgan');
-
-// Routes
-const userRoutes = require('./routes/userRoutes');
-const productRoutes = require('./routes/productRoutes');
-const orderRoutes = require('./routes/ordersRoutes');
-
+const express = require("express");
+const cors = require("cors");
 const app = express();
 
-// Middlewares
+// Middleware
 app.use(cors());
 app.use(express.json());
-app.use(morgan('dev'));
 
-// API Routes
-app.use('/api/users', userRoutes);
-app.use('/api/products', productRoutes);
-app.use('/api/orders', orderRoutes);
+// ✅ Import routes
+const adminRoutes = require("./routes/adminRoutes");
 
-// Health check
-app.get('/', (req, res) => {
-  res.send('🎉 Lucky Marketplace Backend is running!');
+// ✅ Connect routes
+app.use("/api/admin", adminRoutes);
+
+// ✅ Test route
+app.get("/", (req, res) => {
+  res.send("Lucky Marketplace Backend is running!");
+});
+
+// ✅ Optional test API route
+app.get("/api/test", (req, res) => {
+  res.json({ message: "Backend API working fine ✅" });
 });
 
 module.exports = app;
