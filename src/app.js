@@ -3,8 +3,8 @@ const cors = require("cors");
 const morgan = require("morgan");
 
 const adminRoutes = require("./routes/adminRoutes");
-const userRoutes = require("./routes/userRoutes"); // optional
-const productRoutes = require("./routes/productRoutes"); // optional
+const userRoutes = require("./routes/userRoutes");
+const productRoutes = require("./routes/productRoutes");
 
 const app = express();
 
