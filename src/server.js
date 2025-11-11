@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
+const bcrypt = require("bcryptjs");
 const app = require("./app");
 const User = require("./models/User");
-const bcrypt = require("bcryptjs");
 
 const PORT = process.env.PORT || 5000;
 const MONGO_URI = process.env.MONGO_URI;
@@ -10,7 +10,7 @@ mongoose.connect(MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })
   .then(async () => {
     console.log("✅ MongoDB connected");
 
-    // Auto-create admin if not exists
+    // Ensure admin exists at startup
     const adminEmail = "admin@example.com";
     const existingAdmin = await User.findOne({ email: adminEmail });
 
@@ -27,11 +27,8 @@ mongoose.connect(MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })
       console.log(`ℹ️ Admin already exists: ${adminEmail}`);
     }
 
-    // Start server
     app.listen(PORT, () => {
       console.log(`🚀 Server running on port ${PORT}`);
     });
   })
-  .catch((err) => {
-    console.error("❌ MongoDB connection error:", err);
-  });
+  .catch(err => console.error("❌ MongoDB connection error:", err));
