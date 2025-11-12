@@ -20,6 +20,7 @@ router.get("/", async (req, res) => {
       { name: "Jane Smith", email: "jane@example.com", password: hashedPassword },
       { name: "Alice Brown", email: "alice@example.com", password: hashedPassword },
     ];
+
     for (const user of usersData) {
       const exists = await User.findOne({ email: user.email });
       if (!exists) await User.create(user);
@@ -44,8 +45,8 @@ router.get("/", async (req, res) => {
     // ===== Orders =====
     if (Order && products.length) {
       const ordersData = [
-        { user: users[0]._id, products: [{ product: products[0]._id, quantity: 2 }] },
-        { user: users[1]._id, products: [{ product: products[1]._id, quantity: 1 }] },
+        { user: users[0]._id, products: [{ productId: products[0]._id, quantity: 2 }] },
+        { user: users[1]._id, products: [{ productId: products[1]._id, quantity: 1 }] },
       ];
       for (const o of ordersData) {
         const exists = await Order.findOne({ user: o.user });
