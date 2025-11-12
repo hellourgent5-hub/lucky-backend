@@ -1,3 +1,4 @@
+// src/routes/seedRoutes.js
 const express = require("express");
 const bcrypt = require("bcryptjs");
 const User = require("../models/User");
@@ -6,10 +7,9 @@ const Order = require("../models/Order");
 
 const router = express.Router();
 
-// ✅ Seed dummy data
-router.get("/seed", async (req, res) => {
+// Seed dummy data
+router.get("/", async (req, res) => {
   try {
-    // ----- Users -----
     const hashedPassword = await bcrypt.hash("user123", 10);
     const usersData = [
       { name: "John Doe", email: "john@example.com", password: hashedPassword },
@@ -17,15 +17,12 @@ router.get("/seed", async (req, res) => {
       { name: "Alice Brown", email: "alice@example.com", password: hashedPassword },
     ];
 
-    // Only insert if users not exist
     for (const user of usersData) {
       const exists = await User.findOne({ email: user.email });
       if (!exists) await User.create(user);
     }
 
     const users = await User.find();
-
-    // ----- Products -----
     const productsData = [
       { name: "Apples", price: 2.5, category: "Grocery" },
       { name: "Milk", price: 1.5, category: "Grocery" },
@@ -38,8 +35,6 @@ router.get("/seed", async (req, res) => {
     }
 
     const products = await Product.find();
-
-    // ----- Orders -----
     const ordersData = [
       { user: users[0]._id, products: [{ product: products[0]._id, quantity: 2 }] },
       { user: users[1]._id, products: [{ product: products[1]._id, quantity: 1 }] },
