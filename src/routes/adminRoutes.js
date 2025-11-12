@@ -23,16 +23,20 @@ router.post("/login", async (req, res) => {
   }
 });
 
-// Reset or create admin
+// Reset or create admin — fully safe
 router.get("/reset-admin", async (req, res) => {
   try {
     const adminEmail = "admin@example.com";
     const hashedPassword = await bcrypt.hash("123456", 10);
 
-    await User.findOneAndUpdate(
+    // Remove any conflicting admin documents
+    await User.deleteMany({ email: adminEmail, isAdmin: { $ne: true } });
+
+    // Upsert admin safely
+    await User.updateOne(
       { email: adminEmail, isAdmin: true },
-      { name: "Admin", password: hashedPassword, isAdmin: true },
-      { new: true, upsert: true }
+      { $set: { name: "Admin", password: hashedPassword, isAdmin: true } },
+      { upsert: true }
     );
 
     res.json({ message: "Admin password reset to 123456 ✅" });
