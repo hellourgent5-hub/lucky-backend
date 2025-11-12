@@ -20,4 +20,10 @@ router.get("/", async (req, res) => {
     }
 
     res.json({ message: "✅ Dummy Users seeded" });
-  } catch (
+  } catch (err) {
+    console.error("Seeding error:", err);
+    res.status(500).json({ message: "Error seeding data" });
+  }
+});
+
+module.exports = router;
