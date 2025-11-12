@@ -5,7 +5,8 @@ const morgan = require("morgan");
 const adminRoutes = require("./routes/adminRoutes");
 const userRoutes = require("./routes/userRoutes");
 const productRoutes = require("./routes/productRoutes");
-const seedRoutes = require("./routes/seedRoutes");
+const seedAllRoutes = require("./routes/seedAll");
+
 
 const app = express();
 
@@ -23,6 +24,6 @@ app.get("/api/test", (req, res) => res.json({ message: "Backend API is working â
 app.use("/api/admin", adminRoutes);
 app.use("/api/users", userRoutes);
 app.use("/products", productRoutes);
-app.use("/api/seed", seedRoutes);
+app.use("/api/seed/all", seedAllRoutes);
 
 module.exports = app;
