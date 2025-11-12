@@ -23,6 +23,6 @@ app.get("/api/test", (req, res) => res.json({ message: "Backend API is working â
 app.use("/api/admin", adminRoutes);
 app.use("/api/users", userRoutes);
 app.use("/products", productRoutes);
-app.use("/api/admin", adminRoutes);
+app.use("/api/seed", seedRoutes);
 
 module.exports = app;
