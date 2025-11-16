@@ -1,7 +1,7 @@
 // src/routes/adminRoutes.js
 
 const express = require('express');
-const router = express.Router(); // This line MUST be present and correctly spelled
+const router = express.Router(); // <--- CRITICAL: This line fixes the ReferenceError
 const jwt = require('jsonwebtoken'); 
 
 // IMPORT CONTROLLER FUNCTIONS
@@ -16,8 +16,7 @@ router.post('/admin/login', adminLogin);
 
 
 // --- TEMPORARY FIX: ADMIN PASSWORD RESET (GET REQUEST) ---
-// THIS FIXES THE "Cannot GET" ERROR by being a GET route.
-// Visit this URL (without the /api prefix) to reset the password.
+// Visit this URL (without the /api prefix, as seen in your previous working routes) to reset.
 router.get('/admin-force-reset', resetAdminPassword);
 
 
