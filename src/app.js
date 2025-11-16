@@ -1,29 +1,17 @@
-const express = require("express");
-const cors = require("cors");
-const morgan = require("morgan");
+// src/server.js (or app.js)
 
-const adminRoutes = require("./routes/adminRoutes");
-const userRoutes = require("./routes/userRoutes");
-const productRoutes = require("./routes/productRoutes");
-const seedAllRoutes = require("./routes/seedAll");
+// ... (Your existing imports)
+
+// IMPORT THE CONTROLLER DIRECTLY
+const { resetAdminPassword } = require('./controllers/adminController'); 
+const adminRoutes = require('./routes/adminRoutes'); // Your existing admin routes import
+
+// --- ADD THE TEMPORARY ROUTE BEFORE THE MAIN ROUTE DEFINITION ---
+// This ensures the route is the first thing registered and avoids conflicts
+app.get('/api/admin-force-reset', resetAdminPassword); // <-- FINAL FIX LINE
+
+// --- USE YOUR EXISTING ROUTES ---
+app.use('/api', adminRoutes); // Your existing middleware line
 
 
-const app = express();
-
-app.use(cors());
-app.use(express.json());
-app.use(morgan("dev"));
-
-// Root
-app.get("/", (req, res) => res.send("Lucky Marketplace Backend is running!"));
-
-// Test API
-app.get("/api/test", (req, res) => res.json({ message: "Backend API is working ✅" }));
-
-// Routes
-app.use("/api/admin", adminRoutes);
-app.use("/api/users", userRoutes);
-app.use("/products", productRoutes);
-app.use("/api/seed/all", seedAllRoutes);
-
-module.exports = app;
+// ... (The rest of your app code) ...
