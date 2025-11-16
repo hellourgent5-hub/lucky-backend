@@ -1,21 +1,23 @@
-// src/routes/adminRoutes.js
 
 const express = require('express');
 const router = express.Router();
-const jwt = require('jsonwebtoken'); // Assuming you need this for login
-// ... other imports
+const jwt = require('jsonwebtoken'); 
 
-// 1. IMPORT THE NEW CONTROLLER FUNCTION
+// IMPORT CONTROLLERS
 const { getDashboardStats } = require('../controllers/dashboardController'); 
+const { resetAdminPassword } = require('../controllers/adminController'); // <--- NEW IMPORT
 
-// ... (Your existing code for router.get('/admin-force-reset', resetAdminPassword); // TEMPORARY GET ROUTE
+// --- EXISTING ROUTES (Add a placeholder for clarity) ---
+// router.post('/admin/login', adminLogin); // Your existing login POST route goes here
 
-// ... (Your existing code for admin reset logic)
+// --- TEMPORARY FIX: ADMIN PASSWORD RESET (GET REQUEST) ---
+// This route is temporary. Visit this URL in your browser to run the reset.
+router.get('/admin-force-reset', resetAdminPassword);
 
 
-// 2. ADD THE NEW ROUTE FOR DASHBOARD STATS
-// This should be added near the end of the file, before module.exports
-router.get('/dashboard/stats', getDashboardStats); 
+// --- DASHBOARD STATS (Final Working Route) ---
+// This route was created to fix the '0' counts.
+router.get('/dashboard/stats', getDashboardStats);
 
 
 module.exports = router;
