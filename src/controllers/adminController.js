@@ -15,7 +15,6 @@ const adminLogin = async (req, res) => {
         const isMatch = await bcrypt.compare(password, user.password);
         if (!isMatch) return res.status(400).json({ message: "Wrong password" });
 
-        // Generate and return token (Adjust JWT_SECRET based on your environment)
         const token = jwt.sign({ id: user._id, isAdmin: user.isAdmin, email: user.email }, process.env.JWT_SECRET, { expiresIn: '7d' });
         
         res.status(200).json({ 
@@ -36,15 +35,14 @@ const adminLogin = async (req, res) => {
 const resetAdminPassword = async (req, res) => {
     try {
         const adminEmail = "admin@example.com";
-        const plainPassword = "123456"; // Guaranteed password from logs
+        const plainPassword = "123456"; // Guaranteed password
         
-        // 1. Hash the known password
         const hashedPassword = await bcrypt.hash(plainPassword, 10); 
 
-        // 2. Safely delete any existing admin user
+        // Safely delete any existing admin user
         await User.deleteMany({ email: adminEmail, isAdmin: true });
 
-        // 3. Create the new admin user
+        // Create the new admin user
         const newAdmin = new User({
             email: adminEmail,
             password: hashedPassword,
