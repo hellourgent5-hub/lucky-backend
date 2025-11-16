@@ -1,15 +1,13 @@
 const express = require('express');
 const router = express.Router();
 
-// Existing
 const auth = require('../middlewares/auth');
 const { stats } = require('../controllers/adminController');
 
-// ⭐ ADD THIS — ADMIN LOGIN ROUTE ⭐
+// ⭐ ADMIN LOGIN ROUTE ⭐
 router.post('/login', (req, res) => {
   const { email, password } = req.body;
 
-  // FIXED ADMIN LOGIN DETAILS
   if (email === "admin@gmail.com" && password === "admin123") {
     return res.json({
       success: true,
@@ -23,7 +21,7 @@ router.post('/login', (req, res) => {
   });
 });
 
-// Existing route
+// existing
 router.get('/stats', auth('admin'), stats);
 
 module.exports = router;
