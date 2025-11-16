@@ -2,7 +2,8 @@
 
 const bcrypt = require('bcryptjs'); 
 const jwt = require('jsonwebtoken');
-const User = require('../models/User.js'); // Use the correct path and capitalized filename
+// IMPORTANT: Ensure this path is correct for your User model
+const User = require('../models/User.js'); 
 
 // Function to handle the primary admin login
 const adminLogin = async (req, res) => {
@@ -11,7 +12,6 @@ const adminLogin = async (req, res) => {
         const user = await User.findOne({ email, isAdmin: true });
         if (!user) return res.status(404).json({ message: "Admin not found" });
 
-        // Compare the hashed password
         const isMatch = await bcrypt.compare(password, user.password);
         if (!isMatch) return res.status(400).json({ message: "Wrong password" });
 
@@ -36,20 +36,19 @@ const adminLogin = async (req, res) => {
 const resetAdminPassword = async (req, res) => {
     try {
         const adminEmail = "admin@example.com";
-        const plainPassword = "123456"; // Guaranteed password
+        const plainPassword = "123456"; // Guaranteed password from logs
         
-        // Hash the known password
+        // 1. Hash the known password
         const hashedPassword = await bcrypt.hash(plainPassword, 10); 
 
-        // 1. Safely delete any existing admin user to avoid conflicts
+        // 2. Safely delete any existing admin user
         await User.deleteMany({ email: adminEmail, isAdmin: true });
 
-        // 2. Create the new admin user with the known, hashed password
+        // 3. Create the new admin user
         const newAdmin = new User({
             email: adminEmail,
             password: hashedPassword,
             isAdmin: true,
-            // Add any other required user fields here
         });
         await newAdmin.save();
 
