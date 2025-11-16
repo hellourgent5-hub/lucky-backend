@@ -1,42 +1,50 @@
-// src/controllers/adminController.js (Admin Setup and Reset Logic)
+// src/controllers/adminController.js
 
-const bcrypt = require('bcryptjs'); // Assuming you use bcrypt for hashing
-const User = require('../models/User.js'); // Use the correct path and capitalized name
+const bcrypt = require('bcryptjs'); 
+const jwt = require('jsonwebtoken');
+const User = require('../models/User.js'); // Use the correct path and capitalized filename
 
-// Function to handle the admin login (You should already have this)
+// Function to handle the primary admin login
 const adminLogin = async (req, res) => {
-    // *** Your existing login logic goes here ***
     const { email, password } = req.body;
     try {
         const user = await User.findOne({ email, isAdmin: true });
         if (!user) return res.status(404).json({ message: "Admin not found" });
 
+        // Compare the hashed password
         const isMatch = await bcrypt.compare(password, user.password);
         if (!isMatch) return res.status(400).json({ message: "Wrong password" });
 
-        // If login successful, return token (Ensure token generation is handled)
-        // const token = jwt.sign({ id: user._id, isAdmin: user.isAdmin }, process.env.JWT_SECRET, { expiresIn: '7d' });
-        res.status(200).json({ success: true, message: "Login successful" }); 
+        // Generate and return token (Adjust JWT_SECRET based on your environment)
+        const token = jwt.sign({ id: user._id, isAdmin: user.isAdmin, email: user.email }, process.env.JWT_SECRET, { expiresIn: '7d' });
+        
+        res.status(200).json({ 
+            success: true, 
+            message: "Login successful",
+            token: token,
+            user: { id: user._id, email: user.email, isAdmin: true } 
+        }); 
 
     } catch (error) {
+        console.error("Admin Login Error:", error);
         res.status(500).json({ message: "Server error during login" });
     }
 };
 
 
-// Function to force-reset the admin password (The immediate fix for your issue)
+// Function to force-reset the admin password (The fix for your current issue)
 const resetAdminPassword = async (req, res) => {
     try {
         const adminEmail = "admin@example.com";
-        const plainPassword = "123456"; // Known password from logs
+        const plainPassword = "123456"; // Guaranteed password
         
-        // 1. Hash the known password
+        // Hash the known password
         const hashedPassword = await bcrypt.hash(plainPassword, 10); 
 
-        // 2. Safely delete any existing admin user to avoid conflicts
+        // 1. Safely delete any existing admin user to avoid conflicts
         await User.deleteMany({ email: adminEmail, isAdmin: true });
 
-        // 3. Create the new admin user with the known, hashed password
+        // 2. Create the new admin user with the known, hashed password
         const newAdmin = new User({
             email: adminEmail,
             password: hashedPassword,
@@ -59,6 +67,6 @@ const resetAdminPassword = async (req, res) => {
 };
 
 module.exports = { 
-    adminLogin, // Export your primary login function
-    resetAdminPassword // Export the new reset function
+    adminLogin, 
+    resetAdminPassword 
 };
