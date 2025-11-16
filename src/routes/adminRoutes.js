@@ -1,32 +1,13 @@
 // src/routes/adminRoutes.js
 
-const express = require('express');
-const router = express.Router();
-const jwt = require('jsonwebtoken'); 
-
-// IMPORT CONTROLLER FUNCTIONS
-// Ensure the function names and file names are correct here
-const { getDashboardStats } = require('../controllers/dashboardController'); 
-const { adminLogin, resetAdminPassword } = require('../controllers/adminController'); 
-
+// ... (Existing imports)
 
 // --- ADMIN AUTH ROUTES ---
-
-// 1. Admin Login Route
 router.post('/admin/login', adminLogin);
 
-
-// --- TEMPORARY FIX: ADMIN PASSWORD RESET (GET REQUEST) ---
-// THIS FIXES THE "Cannot GET" ERROR. This must be a GET route for browser access.
-router.get('/admin-force-reset', resetAdminPassword);
-
-
 // --- DASHBOARD STATS ROUTE ---
-// 2. Dashboard Statistics Route (Fixes the '0' counts)
 router.get('/dashboard/stats', getDashboardStats);
 
-
-// --- (Your existing code for other admin-protected routes would go here) ---
-
+// ... (No router.get('/admin-force-reset', ...) here anymore) ...
 
 module.exports = router;
