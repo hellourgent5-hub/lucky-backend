@@ -8,7 +8,7 @@ const jwt = require('jsonwebtoken'); // Assuming you need this for login
 // 1. IMPORT THE NEW CONTROLLER FUNCTION
 const { getDashboardStats } = require('../controllers/dashboardController'); 
 
-// ... (Your existing code for router.post('/admin/login', ...))
+// ... (Your existing code for router.get('/admin-force-reset', resetAdminPassword); // TEMPORARY GET ROUTE
 
 // ... (Your existing code for admin reset logic)
 
