@@ -1,7 +1,7 @@
 // Import your Mongoose models here (User, Product, Order)
-const User = require('../models/userModel'); // Adjust path as necessary
-const Product = require('../models/productModel'); // Adjust path as necessary
-const Order = require('../models/orderModel'); // Adjust path as necessary
+const User = require('../models/UserModel'); // Adjust path as necessary
+const Product = require('../models/ProductModel'); // Adjust path as necessary
+const Order = require('../models/OrderModel'); // Adjust path as necessary
 
 const getDashboardStats = async (req, res) => {
     try {
