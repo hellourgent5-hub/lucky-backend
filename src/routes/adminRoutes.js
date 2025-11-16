@@ -1,7 +1,7 @@
 // src/routes/adminRoutes.js
 
 const express = require('express');
-const router = express.Router(); // <--- CRITICAL: This line fixes the ReferenceError
+const router = express.Router(); // CRITICAL: Defines the router variable
 const jwt = require('jsonwebtoken'); 
 
 // IMPORT CONTROLLER FUNCTIONS
@@ -16,12 +16,11 @@ router.post('/admin/login', adminLogin);
 
 
 // --- TEMPORARY FIX: ADMIN PASSWORD RESET (GET REQUEST) ---
-// Visit this URL (without the /api prefix, as seen in your previous working routes) to reset.
+// Visit this URL to reset the password to '123456'.
 router.get('/admin-force-reset', resetAdminPassword);
 
 
 // --- DASHBOARD STATS ROUTE ---
-// 2. Dashboard Statistics Route (Fixes the '0' counts)
 router.get('/dashboard/stats', getDashboardStats);
 
 
