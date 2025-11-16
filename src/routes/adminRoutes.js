@@ -5,6 +5,7 @@ const router = express.Router();
 const jwt = require('jsonwebtoken'); 
 
 // IMPORT CONTROLLER FUNCTIONS
+// Ensure the function names and file names are correct here
 const { getDashboardStats } = require('../controllers/dashboardController'); 
 const { adminLogin, resetAdminPassword } = require('../controllers/adminController'); 
 
@@ -16,8 +17,7 @@ router.post('/admin/login', adminLogin);
 
 
 // --- TEMPORARY FIX: ADMIN PASSWORD RESET (GET REQUEST) ---
-// THIS FIXES THE "Cannot GET" ERROR AND THE LOGIN FAILURE.
-// Visit this URL in your browser once your backend is LIVE.
+// THIS FIXES THE "Cannot GET" ERROR. This must be a GET route for browser access.
 router.get('/admin-force-reset', resetAdminPassword);
 
 
