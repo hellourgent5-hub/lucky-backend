@@ -2,10 +2,9 @@
 
 const bcrypt = require('bcryptjs'); 
 const jwt = require('jsonwebtoken');
-// IMPORTANT: Ensure this path is correct for your User model
+// IMPORTANT: Adjust path if needed, but the filename is capitalized
 const User = require('../models/User.js'); 
 
-// Function to handle the primary admin login
 const adminLogin = async (req, res) => {
     const { email, password } = req.body;
     try {
@@ -31,7 +30,6 @@ const adminLogin = async (req, res) => {
 };
 
 
-// Function to force-reset the admin password (The fix for your current issue)
 const resetAdminPassword = async (req, res) => {
     try {
         const adminEmail = "admin@example.com";
@@ -39,10 +37,9 @@ const resetAdminPassword = async (req, res) => {
         
         const hashedPassword = await bcrypt.hash(plainPassword, 10); 
 
-        // Safely delete any existing admin user
+        // Safely delete and recreate the admin user
         await User.deleteMany({ email: adminEmail, isAdmin: true });
 
-        // Create the new admin user
         const newAdmin = new User({
             email: adminEmail,
             password: hashedPassword,
